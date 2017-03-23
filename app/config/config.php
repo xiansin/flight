@@ -9,6 +9,8 @@
 $globalConfig = include APP_PATH . '/config/global.php';
 //数据库连接配置
 $dbConfig = include APP_PATH . '/config/database.php';
+//日志级别
+$logConfig = include APP_PATH . '/config/logLevel.php';
 
 //合并相关配置项
-return array_merge($globalConfig);
+return array_merge($globalConfig, $logConfig);

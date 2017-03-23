@@ -12,13 +12,14 @@ class Folder
     /**
      * 创建目录 成功返回-true 失败返回-false
      * @param $dirName              目录名称
-     * @param string $authority     目录权限
+     * @param string $authority 目录权限
+     * @param bool $recursive
      * @return bool
      */
-    public static function createFolder($dirName,$authority = '0777')
+    public static function createFolder($dirName, $authority = '0777', $recursive = false)
     {
         if (!file_exists($dirName)) {
-            if (@mkdir($dirName, $authority)) {
+            if (@mkdir($dirName, $authority, $recursive)) {
                 return true;
             } else {
                 return false;
@@ -39,7 +40,7 @@ class Folder
         //获取目录所有文件名
         $fileNames = self::_getFileNamesByDir($dirName);
         foreach ($fileNames as $value) {
-            $dirArray[] =  $value;
+            $dirArray[] = $value;
         }
         return $dirArray;
     }

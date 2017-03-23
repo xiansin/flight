@@ -5,4 +5,7 @@
  * Date: 2017/3/23
  * Time: 15:31
  */
-echo 1;
+Flight::route("/", function () {
+    Flight::get("flight.controllers.path");
+});
+

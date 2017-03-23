@@ -30,14 +30,12 @@ foreach ($routes as $route){
     include_once $route;
 }
 
-Flight::route("/", function () {
-    Flight::get("flight.controllers.path");
-});
-
 //notFound redirect to 404 page
 Flight::map('notFound', function () {
     include '404.php';
 });
+
+Flight::before("start", array("Controller", "init"));
 
 Flight::start();
 
