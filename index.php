@@ -17,6 +17,8 @@ define("DIR", dirname(__FILE__) . DIRECTORY_SEPARATOR);
 define("APP_PATH", DIR . "app" . DIRECTORY_SEPARATOR);
 //autoLoading config list
 Flight::set(require APP_PATH . "config/config.php");
+//autoLoading PHPExcel
+Flight::set(require APP_PATH."libs/phpExcel/PHPExcel.php");
 //Adds a path for autoLoading controllers classes.
 Flight::path(Flight::get("flight.controllers.path"));
 //Adds a path for autoLoading models classes.
@@ -32,7 +34,7 @@ foreach ($routes as $route){
 
 //notFound redirect to 404 page
 Flight::map('notFound', function () {
-    include '404.php';
+    include 'app/views/error/404.php';
 });
 
 Flight::before("start", array("Controller", "init"));

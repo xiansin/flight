@@ -5,12 +5,9 @@
  * Date: 2017/3/23
  * Time: 16:16
  * 功能描述: 用于记录日志
- * @method static void logWrite()   写日志
- * @method static void trackTrace() 追踪时第几行调用
- * @method static void createDir()  创建文件夹
- * @method static void formatData() 格式转换
  */
 define("ENTER", "\r\n");
+
 class Log
 {
     /**
@@ -18,12 +15,12 @@ class Log
      * @param int $level 日志级别
      * @param $msg
      * @param $data
-     * @param string $log_type
+     * @param string $filename
      */
-    public static function logWrite($level = 2, $msg, $data, $log_type = "error")
+    public static function logWrite($level = 2, $msg, $data, $filename = "error")
     {
         $path = Flight::get("flight.storage.path") . "/logs/" . date("Ymd") . "/";
-        $filename = $log_type . ".log";
+        $filename = $filename . ".log";
         self::createDir($path);
         $path = $path . $filename;
         if (!is_writable($path)) {
@@ -58,7 +55,7 @@ class Log
         $array = debug_backtrace();
         unset ($array[0]);
         foreach ($array as $row) {
-            $str .= $row['file'] . ':' . $row['line'] . '行，调用方法：' . $row['function'] . '<br>';
+            $str .= $row['file'] . ':' . $row['line'] . '行，调用方法：' . $row['function'] . ENTER;
         }
         return $str;
     }
@@ -71,8 +68,8 @@ class Log
      */
     private static function createDir($path, $mode = 0777, $recursive = 1)
     {
-        if(!is_dir($path)){
-            Folder::createFolder($path,$mode,$recursive);
+        if (!is_dir($path)) {
+            Folder::createFolder($path, $mode, $recursive);
         }
 
     }
@@ -87,10 +84,10 @@ class Log
         $return = '';
         //数组和对象都格式化
         if (is_array($data) || is_object($data)) {
-            $return .= 'total_count:' . count($data) . "\r\n";
-            $return .= json_encode($data) . "\r\n";
+            $return .= 'total_count:' . count($data) . ENTER;
+            $return .= json_encode($data) . ENTER;
         } else {
-            $return .= "$data\r\n";
+            $return .= "$data" . ENTER;
         }
         return $return;
     }

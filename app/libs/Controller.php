@@ -186,19 +186,6 @@ class Controller
     }
 
     /**
-     * 根据用户id，动态分配视频服务地址
-     * @param $user_id
-     */
-    public static function get_video_config($user_id)
-    {
-        $videoConfig = Flight::get('VIDEO_CONFIG');
-        $videoList = $videoConfig['video_list'];
-        $videoCount = count($videoList);
-        $videoConfig['video_list'] = $videoList[intval($user_id) % $videoCount];
-        return $videoConfig;
-    }
-
-    /**
      * ajax分页处理
      * @param $rows 需要传递的总条数
      * @param $limit 每页显示条数
