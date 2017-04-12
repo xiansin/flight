@@ -1,2 +1,3 @@
 # flight
-Flight demo
+利用Flight Framework集成的简单MVC
+
