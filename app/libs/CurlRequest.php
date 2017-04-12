@@ -12,8 +12,8 @@ class CurlRequest
 {
     /**
      * HTTP POST 请求
-     * @param $url          请求URL
-     * @param $data         请求数据
+     * @param string $url          请求URL
+     * @param array $data         请求数据
      * @param null $header HTTP请求头
      * @return mixed        返回结果
      */
@@ -38,7 +38,7 @@ class CurlRequest
 
     /**
      * HTTP GET 请求
-     * @param $url          请求URL
+     * @param string $url          请求URL
      * @param null $header HTTP请求头
      * @return mixed        返回结果
      */
@@ -82,5 +82,30 @@ class CurlRequest
 
         return $result;
     }
+
+    /**
+     * XML curl
+     * @param string $url
+     * @param array $data
+     * @return mixed
+     */
+    public static function curlXml($url, $data)
+    {
+        $header = array(
+            'Content-type: text/xml',
+            'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36'
+        );
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15); //15秒超时时间
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //返回内容不是输出
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+
 
 }

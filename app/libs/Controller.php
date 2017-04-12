@@ -9,6 +9,10 @@ class Controller
     protected static $_controllerInstances = array();
     protected static $_modelInstances = array();
 
+    /**
+     * 初始化 框架
+     * 定义对应方法
+     */
     public static function init()
     {
         date_default_timezone_set("Asia/Shanghai");
@@ -30,74 +34,22 @@ class Controller
         Flight::map("model", array(__CLASS__, "getModel"));
     }
 
+    /**
+     * 过滤用户提交数据防止sql注入
+     * @param $data
+     * @return array|string
+     */
     public static function stripSlashesDeep($data)
     {
         if (is_array($data)) return array_map(array(__CLASS__, __FUNCTION__), $data);
         else return stripslashes($data);
     }
-
-
-    public static function cache($path = "data")
-    {
-        $path = Flight::get("cache.path") . "/$path";
-        if (!is_dir($path)) {
-            mkdir($path, 0777, TRUE);
-        }
-        if (!isset(self::$_cacheInstances[$path])) {
-            $cache = new \Doctrine\Common\Cache\FilesystemCache($path, ".cache");
-            self::$_cacheInstances[$path] = $cache;
-        }
-
-        return self::$_cacheInstances[$path];
-    }
-
-    public static function log($name)
-    {
-        if (!isset(self::$_logInstances[$name])) {
-            $logger = new \Apix\Log\Logger\File(Flight::get("log.path") . "/{$name}.log");
-            self::$_logInstances[$name] = $logger;
-        }
-
-        return self::$_logInstances[$name];
-    }
-
-    public static function curl($url, $data, $timeout = 0)
-    {
-        if (!$url || !$data) {
-            return false;
-        }
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        if ($timeout) {
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout);
-        }
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
-
-    public static function xmlCurl($url, $data)
-    {
-        $header = array(
-            'Content-type: text/xml',
-            'User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36'
-        );
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 15); //15秒超时时间
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //返回内容不是输出
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
-
+    
+    /**
+     * 定义请求地址http相应
+     * @param string $msg
+     * @param int $code
+     */
     public static function halt($msg = "", $code = 200)
     {
         Flight::response(false)
@@ -107,17 +59,29 @@ class Controller
             ->send();
     }
 
+    /**
+     * 获取称心运行时间
+     * @return string
+     */
     public static function getRunTime()
     {
         if (!defined("START_TIME")) {
             return "";
         }
 
-        $stime = explode(" ", START_TIME);
-        $etime = explode(" ", microtime());
-        return sprintf("%0.4f", round($etime[0] + $etime[1] - $stime[0] - $stime[1], 4));
+        $start_time = explode(" ", START_TIME);
+        $end_time = explode(" ", microtime());
+        return sprintf("%0.4f", round($end_time[0] + $end_time[1] - $start_time[0] - $start_time[1], 4));
     }
 
+    /**
+     * 返回Json数据
+     * @param int $status       状态码
+     * @param string $msg       提示信息
+     * @param string $data      数据
+     * @param bool $is_return   是否需要返回 true-返回 false-直接输出
+     * @return array|string
+     */
     public static function returnJson($status, $msg, $data = NULL, $is_return = false)
     {
         $res = array(
@@ -132,6 +96,11 @@ class Controller
         }
     }
 
+    /**
+     * 实例化控制器
+     * @param $name
+     * @return mixed
+     */
     public static function getController($name)
     {
         $class = "\\" . trim(str_replace("/", "\\", $name), "\\") . "Controller";
@@ -142,7 +111,13 @@ class Controller
         return self::$_controllerInstances[$class];
     }
 
-    public static function getModel($name, $initDb = TRUE)
+    /**
+     * 实例化 Model
+     * @param $name
+     * @param bool $initDb
+     * @return mixed
+     */
+    public static function getModel($name/*, $initDb = TRUE*/)
     {
         $class = "\\" . trim(str_replace("/", "\\", $name), "\\") . "Model";
         if (!isset(self::$_modelInstances[$class])) {
@@ -156,16 +131,20 @@ class Controller
         return self::$_modelInstances[$class];
     }
 
+    /**
+     * 获取客户端IP
+     * @return int
+     */
     public static function curIp()
     {
         $ip = '';
-        if (Getenv('HTTP_CLIENT_IP') && StrCaseCmp(Getenv('HTTP_CLIENT_IP'), 'unknown')) {
-            $ip = Getenv('HTTP_CLIENT_IP');
-        } else if (Getenv('HTTP_X_FORWARDED_FOR') && StrCaseCmp(Getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
-            $ip = Getenv('HTTP_X_FORWARDED_FOR');
-        } else if (Getenv('REMOTE_ADDR') && StrCaseCmp(Getenv('REMOTE_ADDR'), 'unknown')) {
-            $ip = Getenv('REMOTE_ADDR');
-        } else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && StrCaseCmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+        if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+            $ip = getenv('HTTP_CLIENT_IP');
+        } else if (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+            $ip = getenv('HTTP_X_FORWARDED_FOR');
+        } else if (getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+            $ip = getenv('REMOTE_ADDR');
+        } else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
             $ip = $_SERVER['REMOTE_ADDR'];
         } else {
             $ip = '127.0.0.1';
@@ -178,8 +157,9 @@ class Controller
         foreach ($arguments as $k => $v) {
             Flight::request()->query[$k] = $v;
         }
-
+        //获取调用的类名
         $class = get_called_class();
+        //方法名
         $name = substr($name, 1);
         $controller = new $class($name);
         $controller->$name();
@@ -187,17 +167,17 @@ class Controller
 
     /**
      * ajax分页处理
-     * @param $rows 需要传递的总条数
-     * @param $limit 每页显示条数
+     * @param int $rows 需要传递的总条数
+     * @param int $limit 每页显示条数
      * @return array
      */
-    public function ajaxpage($rows, $limit)
+    public function ajaxPage($rows, $limit)
     {
         $p = new \Pagination;
-        $pagenum = (isset($_REQUEST["page"]) && $_REQUEST["page"] != '') ? $_REQUEST["page"] : 1;
+        $page_num = (isset($_REQUEST["page"]) && $_REQUEST["page"] != '') ? $_REQUEST["page"] : 1;
         $p->items($rows);//总条数
         $p->limit($limit);//页大小
-        $currentPage = $p->currentPage($pagenum);//当前页
+        //$currentPage = $p->currentPage($page_num);//当前页
         $p->nextLabel('');//移除“next”文本
         $p->prevLabel('');//移除“previous”文本
         $pageInfo = $p->show();
