@@ -46,7 +46,7 @@ class Controller
     }
     
     /**
-     * 定义请求地址http相应
+     * 定义请求地址http响应
      * @param string $msg
      * @param int $code
      */
@@ -60,7 +60,7 @@ class Controller
     }
 
     /**
-     * 获取称心运行时间
+     * 获取程序运行时间
      * @return string
      */
     public static function getRunTime()
@@ -79,21 +79,16 @@ class Controller
      * @param int $status       状态码
      * @param string $msg       提示信息
      * @param string $data      数据
-     * @param bool $is_return   是否需要返回 true-返回 false-直接输出
      * @return array|string
      */
-    public static function returnJson($status, $msg, $data = NULL, $is_return = false)
+    public static function returnJson($status, $msg, $data = NULL)
     {
         $res = array(
             "status" => $status,
             "msg" => $msg,
             "data" => $data
         );
-        if ($is_return) {
-            return $res;
-        } else {
-            Flight::json($res);
-        }
+        Flight::json($res);
     }
 
     /**

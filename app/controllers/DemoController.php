@@ -9,13 +9,14 @@
 
 class DemoController extends Controller{
     public function index(){
-        $head = ['one','two'];
-        $data = [
-            0=>['one0','two0'],
-            1=>['one1','two1']
-        ];
-        $excel = new OutputExcel();
-        $excel->outputExcelSlice($head,$data,'test',1);
-
+        $a = self::ajaxPage(100,5);
+        echo $a['pageInfo'];
     }
+    public function a(){
+        header("Content-type: image/gif");
+        $image_code = new \VerifyCode();
+        $image_code->imageOut();
+    }
+
+
 }

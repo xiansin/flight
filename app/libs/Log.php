@@ -71,7 +71,6 @@ class Log
         if (!is_dir($path)) {
             Folder::createFolder($path, $mode, $recursive);
         }
-
     }
 
     /**

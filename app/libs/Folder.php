@@ -106,7 +106,7 @@ class Folder
      * @param $path                 路径
      * @param $files                返回到指定数组
      */
-    private function _getAllFiles($path, &$files)
+    private static function _getAllFiles($path, &$files)
     {
         if (is_dir($path)) {
             $dp = dir($path);
@@ -127,7 +127,7 @@ class Folder
      * @param $dir
      * @return array
      */
-    private function _getFileNamesByDir($dir)
+    private static function _getFileNamesByDir($dir)
     {
         $files = array();
         //获取目录所有文件
