@@ -7,16 +7,17 @@
  * Time: 17:08
  * 目录相关操作类
  */
+
 class Folder
 {
     /**
      * 创建目录 成功返回-true 失败返回-false
-     * @param $dirName              目录名称
+     * @param string $dirName              目录名称
      * @param string $authority 目录权限
      * @param bool $recursive
      * @return bool
      */
-    public static function createFolder($dirName, $authority = '0777', $recursive = false)
+    public static function createFolder($dirName='', $authority = '0777', $recursive = false)
     {
         if (!file_exists($dirName)) {
             if (@mkdir($dirName, $authority, $recursive)) {

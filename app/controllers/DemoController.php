@@ -9,14 +9,17 @@
 
 class DemoController extends Controller{
     public function index(){
-        $a = self::ajaxPage(100,5);
-        echo $a['pageInfo'];
-    }
-    public function a(){
-        header("Content-type: image/gif");
-        $image_code = new \VerifyCode();
-        $image_code->imageOut();
-    }
+        $header = $data =[];
+        for($i =0;$i<10;$i++){
+            array_push($header,["key"=>"cell{$i}","value"=>"第{$i}"]);
+        }
+        for($j =0;$j<1500;$j++){
+            for($i =0;$i<10;$i++){
+                $data[$j]["cell{$i}"] = rand(0,1000);
+            }
+        }
 
-
+//        var_dump($data);exit;
+        \Export::exportExcel("a","a",$header,$data);
+    }
 }

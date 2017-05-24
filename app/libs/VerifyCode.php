@@ -14,6 +14,7 @@
  * //验证
  * $verify_code->verifyCode($code);
  */
+
 class VerifyCode
 {
     //验证码宽度

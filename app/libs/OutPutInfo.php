@@ -7,6 +7,7 @@
  * Time: 10:28
  * 功能: 输出信息模型
  */
+
 class OutPutInfo
 {
     private static $instance;

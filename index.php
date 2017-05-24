@@ -1,6 +1,8 @@
 <?php
-require 'flight/Flight.php';
-require 'app/libs/Folder.php';
+require_once 'flight/Flight.php';
+require_once 'app/libs/Folder.php';
+//include constant
+require_once 'app/config/constant.php';
 //Open the output control buffer
 ob_start();
 //close display errors

@@ -8,13 +8,14 @@
  * DateTime: 2017/4/6 13:54
  * 功能描述:HTTP相关请求
  */
+
 class CurlRequest
 {
     /**
      * HTTP POST 请求
-     * @param string $url          请求URL
-     * @param array $data         请求数据
-     * @param null $header HTTP请求头
+     * @param string $url    请求URL
+     * @param array  $data   请求数据
+     * @param null   $header HTTP请求头
      * @return mixed        返回结果
      */
     public static function curlPost($url, $data, $header = null)
@@ -38,8 +39,8 @@ class CurlRequest
 
     /**
      * HTTP GET 请求
-     * @param string $url          请求URL
-     * @param null $header HTTP请求头
+     * @param string $url    请求URL
+     * @param null   $header HTTP请求头
      * @return mixed        返回结果
      */
     public static function curlGet($url, $header = null)
@@ -60,9 +61,9 @@ class CurlRequest
 
     /**
      * HTTP PUT 请求
-     * @param $url          请求URL
-     * @param $data         请求数据
-     * @param null $header HTTP请求头
+     * @param      $url          请求URL
+     * @param      $data         请求数据
+     * @param null $header       HTTP请求头
      * @return mixed        返回结果
      */
     public static function curlPut($url, $data, $header = null)
@@ -86,7 +87,7 @@ class CurlRequest
     /**
      * XML curl
      * @param string $url
-     * @param array $data
+     * @param array  $data
      * @return mixed
      */
     public static function curlXml($url, $data)
@@ -106,6 +107,4 @@ class CurlRequest
         curl_close($ch);
         return $result;
     }
-
-
 }

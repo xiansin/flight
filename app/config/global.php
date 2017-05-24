@@ -5,6 +5,7 @@
  * Date: 2017/3/23
  * Time: 14:19
  */
+
 return [
     //控制器路径
     "flight.controllers.path"   => APP_PATH."controllers",
