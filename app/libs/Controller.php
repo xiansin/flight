@@ -50,7 +50,7 @@ class Controller
      * @param string $msg
      * @param int $code
      */
-    public static function halt($msg = "", $code = 200)
+    public static function halt($code = 200, $msg = "")
     {
         Flight::response(false)
             ->status($code)

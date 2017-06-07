@@ -6,4 +6,5 @@
  * Time: 15:31
  */
 Flight::route("/", array("DemoController", "_index"));
+Flight::route("/a", array("DemoController", "_a"));
 

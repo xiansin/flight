@@ -59,6 +59,7 @@ class VerifyCode
      */
     public function imageOut()
     {
+        header("Content-type:image/gif");
         //创建图像
         $im = $this->createImageSource();
         //设置背景
